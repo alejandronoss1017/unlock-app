@@ -1,8 +1,27 @@
+import LodgingsTable from '@/components/lodgings/lodgings-table'
 import { createClient } from '@/lib/supabase/server'
 
-export default async function Page() {
+const ITEMS_PER_PAGE = 5
+
+export default async function Page({
+  searchParams
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined }
+}) {
+  const page = Number(searchParams?.page ?? 1) - 1
+  const searchTerm = searchParams?.searchTerm ?? ''
+
+  const from = page * ITEMS_PER_PAGE
+  const to = from + ITEMS_PER_PAGE - 1
+
   const supabase = createClient()
-  const { data: lodgings } = await supabase.from('lodging').select()
+  const { data: lodgings, count } = await supabase
+    .from('lodging')
+    .select('*', {
+      count: 'exact'
+    })
+    .like('name', `%${searchTerm}%`)
+    .range(from, to)
 
   //   const channels = supabase
   //     .channel('custom-insert-channel')
@@ -17,7 +36,11 @@ export default async function Page() {
 
   return (
     <>
-      <pre>{JSON.stringify(lodgings, null, 2)}</pre>
+      <LodgingsTable
+        lodgings={lodgings ?? []}
+        totalItems={count ?? 0}
+        rowsPerPage={ITEMS_PER_PAGE}
+      />
     </>
   )
 }
