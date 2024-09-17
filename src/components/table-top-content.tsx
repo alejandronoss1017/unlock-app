@@ -1,12 +1,18 @@
 'use client'
 
-import { Button, Input } from '@nextui-org/react'
-import { Plus, Search } from 'lucide-react'
+import {  Input } from '@nextui-org/react'
+import {  Search } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { useDebounceCallback } from 'usehooks-ts'
 
-export default function TableTopContent() {
+interface TableTopContentProps {
+  addButton: Readonly<React.ReactNode>
+}
+
+export default function TableTopContent({
+  addButton
+}: Readonly<TableTopContentProps>) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const pathname = usePathname()
@@ -47,6 +53,7 @@ export default function TableTopContent() {
       <div className="flex justify-between gap-3 items-end">
         <Input
           isClearable
+          variant="bordered"
           className="w-full sm:max-w-[44%]"
           placeholder="Search by name..."
           startContent={<Search size={16} />}
@@ -54,11 +61,7 @@ export default function TableTopContent() {
           onClear={onClear}
           onValueChange={onSearchChange}
         />
-        <div className="flex gap-3">
-          <Button color="primary" endContent={<Plus size={16} />}>
-            Add New
-          </Button>
-        </div>
+        <div className="flex gap-3">{addButton}</div>
       </div>
     </div>
   )

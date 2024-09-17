@@ -20,7 +20,13 @@ export default function TableBottomContent({
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams)
-    params.set('page', newPage.toString())
+
+    if (newPage === 1) {
+      params.delete('page')
+    } else {
+      params.set('page', newPage.toString())
+    }
+
     router.push(`${pathname}?${params.toString()}`)
     setPage(newPage)
   }
