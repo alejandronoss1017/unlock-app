@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import {
   Table,
   TableHeader,
@@ -13,124 +12,78 @@ import {
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Chip,
-  User
+  Link
 } from '@nextui-org/react'
 
-import TableBottomContent from '@/components/companies/table-bottom-content'
-import TableTopContent from '@/components/companies/table-top-content'
+import TableBottomContent from '@/components/table-bottom-content'
+import TableTopContent from '@/components/table-top-content'
 
-import { EllipsisVertical } from 'lucide-react'
+import { EllipsisVertical, Eye, Pencil, Plus, Trash } from 'lucide-react'
+import { useCallback } from 'react'
+import { Company } from '@/types'
+import { parseAbsoluteToLocal } from '@internationalized/date'
 
 const columns = [
-  { name: 'ID', uid: 'id', sortable: true },
-  { name: 'NAME', uid: 'name', sortable: true },
-  { name: 'AGE', uid: 'age', sortable: true },
-  { name: 'ROLE', uid: 'role', sortable: true },
-  { name: 'TEAM', uid: 'team' },
-  { name: 'EMAIL', uid: 'email' },
-  { name: 'STATUS', uid: 'status', sortable: true },
+  { name: 'ID', uid: 'company_id' },
+  { name: 'NAME', uid: 'name' },
+  { name: 'CREATED AT', uid: 'created_at' },
   { name: 'ACTIONS', uid: 'actions' }
 ]
 
-const users = [
-  {
-    id: 1,
-    name: 'Tony Reichert',
-    role: 'CEO',
-    team: 'Management',
-    status: 'active',
-    age: '29',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
-    email: 'tony.reichert@example.com'
-  },
-  {
-    id: 2,
-    name: 'Zoey Lang',
-    role: 'Tech Lead',
-    team: 'Development',
-    status: 'paused',
-    age: '25',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-    email: 'zoey.lang@example.com'
-  },
-  {
-    id: 3,
-    name: 'Jane Fisher',
-    role: 'Sr. Dev',
-    team: 'Development',
-    status: 'active',
-    age: '22',
-    avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
-    email: 'jane.fisher@example.com'
-  },
-  {
-    id: 4,
-    name: 'William Howard',
-    role: 'C.M.',
-    team: 'Marketing',
-    status: 'vacation',
-    age: '28',
-    avatar: 'https://i.pravatar.cc/150?u=a048581f4e29026701d',
-    email: 'william.howard@example.com'
-  },
-  {
-    id: 5,
-    name: 'Kristen Copper',
-    role: 'S. Manager',
-    team: 'Sales',
-    status: 'active',
-    age: '24',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'kristen.cooper@example.com'
-  }
-]
+interface CompaniesTableProps {
+  rowsPerPage: number
+  totalItems: number
+  companies: Company[]
+}
 
-type User = (typeof users)[0]
+export default function CompaniesTable({
+  rowsPerPage,
+  totalItems,
+  companies
+}: Readonly<CompaniesTableProps>) {
+  const renderCell = useCallback((company: Company, columnKey: React.Key) => {
+    const cellValue = company[columnKey as keyof Company]
 
-export default function CompaniesTable() {
-  const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-    const cellValue = user[columnKey as keyof User]
+    const createdAt = parseAbsoluteToLocal(company.created_at)
+
 
     switch (columnKey) {
+      case 'company_id':
+        return company.company_id
       case 'name':
+        return company.name
+      case 'created_at':
         return (
-          <User
-            avatarProps={{ radius: 'lg', src: user.avatar }}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        )
-      case 'role':
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{cellValue}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">
-              {user.team}
-            </p>
+          <div>
+              {createdAt.day}/{createdAt.month}/{createdAt.year}
           </div>
-        )
-      case 'status':
-        return (
-          <Chip className="capitalize" size="sm" variant="flat">
-            {cellValue}
-          </Chip>
         )
       case 'actions':
         return (
-          <div className="relative flex justify-end items-center gap-2">
+          <div className="relative flex justify-center items-center gap-2">
             <Dropdown>
               <DropdownTrigger>
                 <Button isIconOnly size="sm" variant="light">
-                  <EllipsisVertical size={16} className="text-default-300" />
+                  <EllipsisVertical size={20} className="text-default-300" />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
-                <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem
+                  startContent={<Eye size={20} className="text-primary" />}
+                  href={`companies/${company.company_id}`}
+                >
+                  View
+                </DropdownItem>
+                <DropdownItem
+                  startContent={<Pencil size={20} className="text-warning" />}
+                >
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  startContent={<Trash size={20} className="text-danger" />}
+                >
+                  Delete
+                </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -144,15 +97,28 @@ export default function CompaniesTable() {
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
       isHeaderSticky
-      topContent={<TableTopContent />}
-      bottomContent={<TableBottomContent rowsPerPage={5} totalItems={100} />}
+      topContent={
+        <TableTopContent
+          addButton={
+            <Button
+              as={Link}
+              href="/companies/create"
+              color="primary"
+              endContent={<Plus size={16} />}
+            >
+              Add New
+            </Button>
+          }
+        />
+      }
+      bottomContent={
+        <TableBottomContent rowsPerPage={rowsPerPage} totalItems={totalItems} />
+      }
       bottomContentPlacement="outside"
       classNames={{
         wrapper: 'max-h-[382px]'
       }}
       selectionMode="single"
-      selectionBehavior="toggle"
-      onRowAction={(row) => console.log('row', row)}
       topContentPlacement="outside"
     >
       <TableHeader columns={columns}>
@@ -160,15 +126,14 @@ export default function CompaniesTable() {
           <TableColumn
             key={column.uid}
             align={column.uid === 'actions' ? 'center' : 'start'}
-            allowsSorting={column.sortable}
           >
             {column.name}
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={'No users found'} items={users}>
+      <TableBody emptyContent={'No companies found'} items={companies}>
         {(item) => (
-          <TableRow key={item.id}>
+          <TableRow key={item.company_id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}
