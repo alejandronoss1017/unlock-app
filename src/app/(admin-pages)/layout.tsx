@@ -1,5 +1,6 @@
 'use client'
 
+import ThemeToggle from '@/components/theme-toggle'
 import {
   Link,
   Navbar,
@@ -31,7 +32,7 @@ export default function AdminLayout({
 
   return (
     <>
-      <Navbar shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
+      <Navbar shouldHideOnScroll onMenuOpenChange={setIsMenuOpen} isBordered>
         <NavbarContent>
           <NavbarMenuToggle
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
@@ -62,16 +63,19 @@ export default function AdminLayout({
         </NavbarContent>
 
         {/* End content of the navbar */}
-        {/* <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
+        <NavbarContent justify="end">
+          <NavbarItem>
+            <ThemeToggle />
+          </NavbarItem>
+          {/* <NavbarItem className="hidden lg:flex">
             <Link href="#">Login</Link>
           </NavbarItem>
           <NavbarItem>
             <Button as={Link} color="primary" href="#" variant="flat">
               Sign Up
             </Button>
-          </NavbarItem>
-        </NavbarContent> */}
+          </NavbarItem> */}
+        </NavbarContent>
         <NavbarMenu>
           {navItems.map((item) => (
             <NavbarMenuItem key={`${item.name}`}>
@@ -89,7 +93,8 @@ export default function AdminLayout({
           ))}
         </NavbarMenu>
       </Navbar>
-      {children}
+      {/* Main content of the pages */}
+      <main className="h-full p-8">{children}</main>
     </>
   )
 }
