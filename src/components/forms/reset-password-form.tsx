@@ -1,6 +1,5 @@
 import { Input } from '@nextui-org/react'
 import { SubmitButton } from '@/components/submit-button'
-import { resetPasswordAction } from '@/lib/actions/auth'
 
 export default function ResetPasswordForm() {
   return (
@@ -24,9 +23,7 @@ export default function ResetPasswordForm() {
           variant="bordered"
           required
         />
-        <SubmitButton color="primary" formAction={resetPasswordAction}>
-          Reset password
-        </SubmitButton>
+        <SubmitButton color="primary">Reset password</SubmitButton>
       </form>
     </>
   )

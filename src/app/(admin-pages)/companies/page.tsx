@@ -14,7 +14,7 @@ export default async function Page({
   const from = page * ITEMS_PER_PAGE
   const to = from + ITEMS_PER_PAGE - 1
 
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: companies, count } = await supabase
     .from('company')
     .select('*', {
