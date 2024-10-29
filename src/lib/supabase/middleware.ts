@@ -7,9 +7,7 @@ export const updateSession = async (request: NextRequest) => {
   try {
     // Create an unmodified response
     let response = NextResponse.next({
-      request: {
-        headers: request.headers
-      }
+      request,
     })
 
     const supabase = createServerClient(
@@ -35,17 +33,20 @@ export const updateSession = async (request: NextRequest) => {
       }
     )
 
-    // This will refresh session if expired - required for Server Components
-    // https://supabase.com/docs/guides/auth/server-side/nextjs
-    const user = await supabase.auth.getUser()
-
-    // protected routes
-    if (request.nextUrl.pathname.startsWith('/protected') && user.error) {
-      return NextResponse.redirect(new URL('/sign-in', request.url))
-    }
-
-    if (request.nextUrl.pathname === '/' && !user.error) {
-      return NextResponse.redirect(new URL('/protected', request.url))
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+  
+    if (
+      !user &&
+      !request.nextUrl.pathname.startsWith('/sign-up') &&
+      !request.nextUrl.pathname.startsWith('/error')&&
+      !request.nextUrl.pathname.startsWith('/unlock') 
+    ) {
+      // no user, potentially respond by redirecting the user to the login page
+      const url = request.nextUrl.clone()
+      url.pathname = '/sign-up'
+      return NextResponse.redirect(url)
     }
 
     return response

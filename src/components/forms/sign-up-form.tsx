@@ -1,17 +1,8 @@
-'use client'
-
-import { useState } from 'react'
 import { SubmitButton } from '@/components/submit-button'
 import { signUpAction } from '@/lib/actions/auth'
 import { Divider, Input, Link } from '@nextui-org/react'
-import { Eye, EyeOff } from 'lucide-react'
 
 export default function SignUpForm() {
-  const [isVisible, setIsVisible] = useState(false)
-
-  const toggleVisibility = () => {
-    setIsVisible(!isVisible)
-  }
   return (
     <>
       <form className="flex flex-col gap-3">
@@ -30,23 +21,7 @@ export default function SignUpForm() {
           name="password"
           placeholder="Your password"
           variant="bordered"
-          type={isVisible ? 'text' : 'password'}
-          endContent={
-            <button type="button" onClick={toggleVisibility}>
-              {isVisible ? (
-                <Eye
-                  name="Eye"
-                  className="pointer-events-none text-2xl text-default-400"
-                  size={24}
-                />
-              ) : (
-                <EyeOff
-                  className="pointer-events-none text-2xl text-default-400"
-                  size={24}
-                />
-              )}
-            </button>
-          }
+          type='password'
         />
         <SubmitButton color="primary" formAction={signUpAction}>
           Sign up
