@@ -2,6 +2,11 @@
 
 import ThemeToggle from '@/components/theme-toggle'
 import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Link,
   Navbar,
   NavbarBrand,
@@ -11,7 +16,7 @@ import {
   NavbarMenuItem,
   NavbarMenuToggle
 } from '@nextui-org/react'
-import { Unlock } from 'lucide-react'
+import { LogOut, Unlock, User } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
@@ -62,19 +67,31 @@ export default function AdminLayout({
           ))}
         </NavbarContent>
 
-        {/* End content of the navbar */}
         <NavbarContent justify="end">
           <NavbarItem>
             <ThemeToggle />
           </NavbarItem>
-          {/* <NavbarItem className="hidden lg:flex">
-            <Link href="#">Login</Link>
-          </NavbarItem>
+          
           <NavbarItem>
-            <Button as={Link} color="primary" href="#" variant="flat">
-              Sign Up
-            </Button>
-          </NavbarItem> */}
+            <Dropdown>
+              <DropdownTrigger>
+                <Button isIconOnly variant="light" aria-label="User menu">
+                  <User size={24} />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="User actions">
+                <DropdownItem
+                  key="logout"
+                  color="danger"
+                  startContent={<LogOut size={18} />}
+                  href="/sign-up"
+                >
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </NavbarItem>
+          
         </NavbarContent>
         <NavbarMenu>
           {navItems.map((item) => (
@@ -93,7 +110,6 @@ export default function AdminLayout({
           ))}
         </NavbarMenu>
       </Navbar>
-      {/* Main content of the pages */}
       <main className="h-full p-8">{children}</main>
     </>
   )

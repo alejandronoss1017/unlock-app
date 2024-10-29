@@ -4,7 +4,7 @@
 import { createClient } from '@/lib/supabase/server'
 // import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { revalidatePath } from 'next/cache'
+// import { revalidatePath } from 'next/cache'
 
 export async function signUpAction(formData: FormData) {
   const supabase = await createClient()
@@ -22,7 +22,7 @@ export async function signUpAction(formData: FormData) {
     redirect('/error')
   }
 
-  revalidatePath('/', 'layout')
+  // revalidatePath('/', 'layout')
   redirect('/')
 }
 
@@ -71,7 +71,7 @@ export const signInAction = async (formData: FormData) => {
     redirect('/error')
   }
 
-  revalidatePath('/', 'layout')
+  // revalidatePath('/', 'layout')
   redirect('/')
 }
 

@@ -18,7 +18,7 @@ export default function UnlockPage() {
   return (
     <div
       className={`flex flex-col items-center justify-center min-h-screen p-4 transition-colors ${
-        isUnlocked ? 'bg-[#16423C]' : 'bg-white'
+        isUnlocked ? 'bg-[#16423C]' : ''
       } ${error ? 'bg-red-800' : ''}`}
     >
       <h1 className={`text-4xl sm:text-6xl  font-semibold ${isUnlocked || error ? 'text-white' : 'text-[#16423C]'}  mb-14 ${k2d.className}`}>UNLOCK</h1>
