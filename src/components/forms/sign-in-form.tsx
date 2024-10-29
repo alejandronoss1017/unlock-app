@@ -18,6 +18,7 @@ export default function SignInForm() {
         <Input
           isRequired
           label="Password"
+          name="password"
           placeholder="Your password"
           type='password'
           variant="bordered"

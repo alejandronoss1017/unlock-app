@@ -39,7 +39,8 @@ export const updateSession = async (request: NextRequest) => {
   
     if (
       !user &&
-      !request.nextUrl.pathname.startsWith('/sign-up') &&
+      !request.nextUrl.pathname.startsWith('/sign-in') &&
+      !request.nextUrl.pathname.startsWith('/sign-up') && 
       !request.nextUrl.pathname.startsWith('/error')&&
       !request.nextUrl.pathname.startsWith('/unlock') 
     ) {
